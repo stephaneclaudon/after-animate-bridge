@@ -4,26 +4,26 @@ compFolder = 'file://' + FLfile.uriToPlatformPath(compFolder);
 
 var imagesFolder = compFolder + 'images/';
 
-if (config) {
+if (compConfig) {
 	var doc = fl.createDocument("timeline");
 	var timeline = doc.getTimeline();
 
-	var projectFile = compFolder + config.compName + '.fla';
+	var projectFile = compFolder + compConfig.compName + '.fla';
 	if (fl.fileExists(projectFile)) {
 		alert("Animate project already exists, delete it and retry.");
 	} else {
-		var imagesExtension = config.fileName.split('.')[1];
+		var imagesExtension = compConfig.fileName.split('.')[1];
 
 		// Grab all png files in the source folder
 		var fileMask = "*." + imagesExtension;
 		var fileList = FLfile.listFolder(imagesFolder + fileMask, "files");
 
 		timeline.deleteLayer(0);
-		timeline.setLayerProperty('name', config.compName);
+		timeline.setLayerProperty('name', 'from_after_effects');
 		timeline.currentFrame = 1;
 		timeline.clearFrames(0);
 
-		doc.library.newFolder(config.compName);
+		doc.library.newFolder(compConfig.compName);
 		// Now process through each one and export it as a swf
 		for (var i = 0; i < fileList.length; i++) {
 			// Import the file
@@ -34,21 +34,21 @@ if (config) {
 			if (i > 0) timeline.insertBlankKeyframe();
 
 			doc.importFile(URI, true);
-			doc.library.moveToFolder(config.compName, fileList[i], true);
+			doc.library.moveToFolder(compConfig.compName, fileList[i], true);
 			
 			doc.library.addItemToDocument({
-				x: config.width * 0.5,
-				y: config.height * 0.5
-			}, config.compName + '/' + fileList[i]);
+				x: compConfig.width * 0.5,
+				y: compConfig.height * 0.5
+			}, compConfig.compName + '/' + fileList[i]);
 
 		}
 		
 		timeline.setLayerProperty('locked', true);
 		timeline.addNewLayer('Paint');
 
-		doc.width = config.width;
-		doc.height = config.height;
-		doc.frameRate = config.frameRate;
+		doc.width = compConfig.width;
+		doc.height = compConfig.height;
+		doc.frameRate = compConfig.frameRate;
 		fl.trace(projectFile);
 		doc.saveAsCopy(projectFile);
 		fl.openDocument(projectFile);
@@ -56,5 +56,5 @@ if (config) {
 
 
 } else {
-	alert('No config file found in folder, can\'t import...');
+	alert('No compConfig file found in script, can\'t import...');
 }

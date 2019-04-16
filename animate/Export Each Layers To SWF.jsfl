@@ -47,12 +47,11 @@ if (documentFolder)
     {
         lyr = lyrs[i];
         originalType = originalTypes[i]
-        fl.trace(lyr.name);
-        if (originalType == "normal" && lyr.parentLayer == null ) 
+        if (originalType == "normal" && lyr.parentLayer == null && lyr.name != 'from_after_effects') 
        {
             lyr.layerType = "normal";
-			fl.trace("Exporting: " + exportFolder + lyr.name+".swf");
-            doc.exportSWF(exportFolder + lyr.name+".swf", true);
+			fl.trace("Exporting layer: " + exportFolder + i + '--' + lyr.name+".swf");
+            doc.exportSWF(exportFolder + i + '--' + lyr.name+".swf", true);
             
             lyr.layerType = "guide";
         }
@@ -77,10 +76,10 @@ if (documentFolder)
                 j++;
             }
 
-			fl.trace("Exporting: " + exportFolder + lyr.name+".swf");
-            doc.exportSWF(exportFolder + lyr.name+".swf", true);
+			fl.trace("Exporting folder : " + exportFolder + i + '--' + lyr.name + ".swf");
+            doc.exportSWF(exportFolder + i + '--' + lyr.name + ".swf", true);
 
-            j = i+1;
+            j = i + 1;
             isChild = true;
             while(isChild == true)
             {
