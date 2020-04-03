@@ -63,29 +63,40 @@
 
   function importFromAnimate() {
     var mainAnimateFolder = findItemByName(animateFolderName);
+    
     if (mainAnimateFolder) {
       for (var i = 1; i <= mainAnimateFolder.numItems; i++) {
         var currentFolderName = mainAnimateFolder.item(i).name;
         var currentFolder = mainAnimateFolder.item(i);
         var fileSystemPath = project.file.path + "/animate/" + currentFolderName + '/swf/';
         var currentFSFolder = new Folder(fileSystemPath);
+        var currentComp = findItemByID(currentFolderName.split('--')[0]);
         var files = currentFSFolder.getFiles();
+
         for (var j = 0; j < files.length; j++) {
           var swfFile = File(files[j]);
-          var alreadyImportedItem = findItemByName(swfFile.name, currentFolder);
-          if (alreadyImportedItem) {
-            alreadyImportedItem.replace(swfFile);
-          } else {
-            var item = project.importFile(new ImportOptions(swfFile));
-            item.parentFolder = currentFolder;
-
-            var relatedComp = findItemByID(item.parentFolder.name.split('--')[0]);
-            relatedComp.layers.add(item);
+          if(swfFile.name.charAt(0) !== '.') {
+            var alreadyImportedItem = findItemByName(swfFile.name, currentFolder);
+            if (alreadyImportedItem) {
+              alreadyImportedItem.replace(swfFile);
+            } else {
+              var item = project.importFile(new ImportOptions(swfFile));
+              item.parentFolder = currentFolder;
+              currentComp.layers.add(item);
+            }
           }
         }
+
+      reorderLayersInComp(currentComp);
       }
     } else {
       rebuildLibraryFromFileSystem();
+    }
+  }
+
+  function reorderLayersInComp(relatedComp) {
+    for (var i = 1; i <= relatedComp.numItems; i++) {
+      
     }
   }
 
